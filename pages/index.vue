@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { useMyStore } from "~/stores/TaskStore";
+import { onMounted } from "vue";
+const store = useMyStore();
+const { filteredTasks, searhQuery } = storeToRefs(store);
+
+onMounted(() => {
+  // Fetch or initialize data here, for example:
+  // Assuming you have a fetchTasks method in your store
+  searhQuery.value === "";
+});
+</script>
 <template>
   <div class="bg-slate-50 min-h-screen">
     <v-layout>
@@ -11,7 +23,7 @@
             <br />
             <h1 class="tracking-wider italic text-lg">Create a List of Task</h1>
 
-            <div class="flex justify-end pt-10 gap-3 "><add /> <menus /></div>
+            <div class="flex justify-end pt-10 gap-3"><add /> <menus /></div>
 
             <div class="pt-10">
               <v-text-field
@@ -55,7 +67,7 @@
                         src="https://cdn.vuetifyjs.com/images/john.png"
                       ></v-img>
                     </v-avatar> -->
-                    <Manage :task="task" />
+                    <Manage :task="task"  :index="i"/>
                   </template>
                   <v-card-text class="truncate">{{ task.desc }}</v-card-text>
                 </v-card>
@@ -67,14 +79,6 @@
     </v-layout>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useMyStore } from "~/stores/TaskStore";
-
-const store = useMyStore();
-const { title, taskList, filteredTasks, searhQuery } = storeToRefs(store);
-
-</script>
 
 <style>
 /* You can add additional styles here if needed */

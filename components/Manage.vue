@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMyStore } from "~/stores/TaskStore";
-import { ref} from "vue";
+import { ref } from "vue";
 // Define the props
 type Task = {
   title: string;
@@ -10,37 +10,28 @@ type Task = {
 };
 const props = defineProps<{
   task: Task;
+  index: number;
 }>();
 const store = useMyStore();
 const { taskList, NewTask, currentDate } = storeToRefs(store);
 const dialog = ref(false);
 
 const save = () => {
-  // if (NewTask.value.title && NewTask.value.desc) {
-  //   taskList.value.unshift({ ...NewTask.value });
-
-  //   NewTask.value = {
-  //     title: "",
-  //     desc: "",
-  //     date: currentDate.value,
-  //     status: false,
-  //   };
-
   dialog.value = !dialog.value;
-  // } else {
-  //   // Optionally, alert the user or show some feedback if the form is incomplete
-  //   alert("Please fill in all fields before saving the task.");
-  // }
+};
+const Delete = (index: number) => {
+  taskList.value.splice(index, 1);
+  dialog.value = !dialog.value;
+  NewTask.value = {
+    title: "",
+    desc: "",
+    date: currentDate.value,
+    status: "No",
+  };
 };
 
 const cancel = () => {
   dialog.value = !dialog.value;
-  // NewTask.value = {
-  //   title: "",
-  //   desc: "",
-  //   date: currentDate.value,
-  //   status: false,
-  // };
 };
 </script>
 
@@ -89,29 +80,38 @@ const cancel = () => {
                     density="compact"
                     :items="['Yes', 'No']"
                   ></v-select>
-
-                  <!-- <v-checkbox
-                  v-model="state.checkbox"
-                  :error-messages="v$.checkbox.$errors.map((e) => e.$message)"
-                  label="Do you agree?"
-                  required
-                  @blur="v$.checkbox.$touch"
-                  @change="v$.checkbox.$touch"
-                ></v-checkbox> -->
                 </form>
               </div>
-              <div class="flex justify-end pt-4">
+              <div class="flex justify-between pt-4">
                 <v-btn
-                  class="me-4"
-                  color="blue"
-                  variant="outlined"
-                  @click="cancel"
+                  class=""
+                  color="red"
+                  variant="elevated"
+                  prepend-icon="mdi-trash-can"
+                  @click="Delete(index)"
                 >
-                  Cancel
+                  Delete
                 </v-btn>
-                <v-btn class="" color="blue" variant="elevated" @click="save">
-                  Save
-                </v-btn>
+                <div>
+                  <v-btn
+                    class="me-2"
+                    color="blue"
+                    variant="outlined"
+                    @click="cancel"
+                    prepend-icon="mdi-cancel"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    prepend-icon="mdi-content-save"
+                    class=""
+                    color="blue"
+                    variant="elevated"
+                    @click="save"
+                  >
+                    Save
+                  </v-btn>
+                </div>
               </div>
             </v-card-text>
           </template>

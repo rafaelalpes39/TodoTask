@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useMyStore } from "~/stores/TaskStore";
+import { onMounted } from "vue";
 import { ref } from "vue";
 const store = useMyStore();
 const { taskList, NewTask, currentDate } = storeToRefs(store);
@@ -13,7 +14,7 @@ const save = () => {
       title: "",
       desc: "",
       date: currentDate.value,
-      status: 'No',
+      status: "No",
     };
 
     dialog.value = !dialog.value;
@@ -32,6 +33,18 @@ const cancel = () => {
     status: "",
   };
 };
+
+onMounted(() => {
+  // Fetch or initialize data here, for example:
+  // Assuming you have a fetchTasks method in your store
+  console.log("Adding new task");
+  NewTask.value = {
+    title: "",
+    desc: "",
+    date: currentDate.value,
+    status: "No",
+  };
+});
 </script>
 
 <template>
@@ -87,6 +100,7 @@ const cancel = () => {
               </div>
               <div class="flex justify-end pt-4">
                 <v-btn
+                  prepend-icon="mdi-cancel"
                   density="comfortable"
                   class="me-4"
                   color="blue"
@@ -96,6 +110,7 @@ const cancel = () => {
                   Cancel
                 </v-btn>
                 <v-btn
+                  prepend-icon="mdi-content-save"
                   density="comfortable"
                   class=""
                   color="blue"

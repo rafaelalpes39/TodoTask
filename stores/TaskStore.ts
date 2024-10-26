@@ -23,25 +23,46 @@ export const useMyStore = defineStore("myStore", () => {
   const title = ref("To Do Task"); // Use camelCase for consistency
   const taskList = ref<Task[]>([]); // You may want to type this for better TypeScript support
 
+  // const filteredTasks = computed(() => {
+  //   // Filter tasks where the title contains the search query (case-insensitive)
+  //   if (!searhQuery.value) {
+
+  //       if (menuActive.value.title === "Completed") {
+  //         return taskList.value.filter(task => task.status==='Yes'); // Assuming 'completed' is a property
+  //       }
+  //       if (menuActive.value.title === "Pending") {
+  //         return taskList.value.filter(task => task.status==='No'); // Assuming 'completed' is a property
+  //       }
+  //       return taskList.value; // Return all tasks for "View All"
+
+  //     // return taskList.value;
+  //   }
+  //  else {
+  //     return taskList.value.filter((task) =>
+  //       task.title.toLowerCase().includes(searhQuery.value.toLowerCase())
+  //     );
+  //   }
+  // });
+
   const filteredTasks = computed(() => {
-    // Filter tasks where the title contains the search query (case-insensitive)
-    if (!searhQuery.value) {
+    // Start with the full task list
+    let filtered = taskList.value;
 
-        if (menuActive.value.title === "Completed") {
-          return taskList.value.filter(task => task.status==='Yes'); // Assuming 'completed' is a property
-        }
-        if (menuActive.value.title === "Pending") {
-          return taskList.value.filter(task => task.status==='No'); // Assuming 'completed' is a property
-        }
-        return taskList.value; // Return all tasks for "View All"
-
-      // return taskList.value;
-    }
-   else {
-      return taskList.value.filter((task) =>
+    // If there's a search query, filter tasks by title
+    if (searhQuery.value) {
+      filtered = filtered.filter((task) =>
         task.title.toLowerCase().includes(searhQuery.value.toLowerCase())
       );
     }
+
+    // Filter by menuActive title
+    if (menuActive.value.title === "Completed") {
+      filtered = filtered.filter((task) => task.status === "Yes");
+    } else if (menuActive.value.title === "Pending") {
+      filtered = filtered.filter((task) => task.status === "No");
+    }
+
+    return filtered; // Return the final filtered tasks
   });
 
   const currentDate = ref(
@@ -63,7 +84,6 @@ export const useMyStore = defineStore("myStore", () => {
     // console.log("menuActive", menuActive.value.title); // Logs the new value
     // You can also log the old value if needed
     // console.log(oldValue);
-  
   });
 
   return {
